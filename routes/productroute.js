@@ -20,7 +20,7 @@ productRouter.get("/:id", getProductById);
 productRouter.post("/", saveProduct);
 
 // Update product by MongoDB _id
-productRouter.put("/:id", updateProduct);
+productRouter.put("/:productId", updateProduct);
 
 // Delete product by MongoDB _id
 productRouter.delete("/:id", deleteProduct);

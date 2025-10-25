@@ -104,38 +104,37 @@ export async function getProductById(req, res) {
 }
 
 // Update product by MongoDB _id
-export async function updateProduct(req, res) {
-    if (!isAdmin(req)) {
-        return res.status(403).json({
+export async function updateProduct(req,res){
+    if(!isAdmin(req)){
+        res.status(403).json({
             message: "You are not authorized to update a product"
-        });
+        })
+        return
     }
 
-    try {
-        const updatedProduct = await Product.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true, runValidators: true }
-        );
+    const productId = req.params.productId
+    const updatingData = req.body
 
-        if (!updatedProduct) {
-            return res.status(404).json({
-                message: "Product not found"
-            });
-        }
+    try{
+        await Product.updateOne(
+            {productId : productId},
+            updatingData
+        )
 
-        res.json({
-            message: "Product updated successfully",
-            product: updatedProduct
-        });
-    } catch (error) {
-        console.error("Error updating product:", error);
+        res.json(
+            {
+                message : "Product updated successfully"
+            }
+        )
+
+    }catch(err){
         res.status(500).json({
-            message: "Error updating product",
-            error: error.message
-        });
+            message : "Internal server error",
+            error : err
+        })
     }
 }
+
 
 // Delete product by MongoDB _id (URL parameter)
 export async function deleteProduct(req, res) {
