@@ -2,17 +2,25 @@ import Product from "../../models/products.js";
 import { isAdmin } from "./usercontroller.js";
 
 // Get all products
-export async function getProducts(req, res) {
-    try {
-        const products = await Product.find();
-        res.json(products);
-    } catch(err) {
-        res.status(500).json({
+export async function getProducts(req,res){
+
+    try{
+        if(isAdmin(req)){
+            const products = await Product.find()
+            res.json(products)
+        }else{
+            const products = await Product.find({isAvailable : true})
+            res.json(products)
+        }
+        
+    }catch(err){
+        res.json({
             message: "Failed to get products",
-            error: err.message
-        });
+            error: err
+        })
     }
 }
+
 
 // Save a new product
 export async function saveProduct(req, res) {
