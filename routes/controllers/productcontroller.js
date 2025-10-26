@@ -85,23 +85,40 @@ export async function saveProduct(req, res) {
 }
 
 // Get product by MongoDB _id
-export async function getProductById(req, res) {
-    try {
-        const product = await Product.findById(req.params.id);
-        if (!product) {
-            return res.status(404).json({
-                message: "Product not found"
-            });
+export async function getProductById(req,res){
+    const productId = req.params.productId
+    
+    try{
+
+        const product = await Product.findOne(
+            {productId : productId}
+        )
+
+        if(product == null){
+            res.status(404).json({
+                message : "Product not found"
+            })
+            return
         }
-        res.json(product);
-    } catch (error) {
-        console.error("Error fetching product:", error);
+        if(product.isAvailable){
+            res.json(product)
+        }else{
+            if(!isAdmin(req)){
+                res.status(404).json({
+                    message : "Product not found"
+                })
+                return
+            }else{
+                res.json(product)
+            }
+        }
+
+    }catch(err){
         res.status(500).json({
-            message: "Error fetching product",
-            error: error.message
-        });
-    }
-}
+            message : "Internal server error",
+            error : err
+        })
+    }}
 
 // Update product by MongoDB _id
 export async function updateProduct(req,res){

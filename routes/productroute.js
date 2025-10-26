@@ -14,7 +14,7 @@ const productRouter = express.Router();
 productRouter.get("/", getProducts);
 
 // Get single product by MongoDB _id
-productRouter.get("/:id", getProductById);
+productRouter.get("/:productId", getProductById);
 
 // Create new product
 productRouter.post("/", saveProduct);
