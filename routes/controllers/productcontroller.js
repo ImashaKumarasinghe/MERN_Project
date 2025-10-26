@@ -36,11 +36,12 @@ export async function saveProduct(req, res) {
         });
     }
 
-    if (!req.body.productId || !req.body.productName || !req.body.price || !req.body.description) {
-        return res.status(400).json({
-            message: "Missing required fields: productId, productName, price, description"
-        });
-    }
+    // ✅ FIXED - Check for "name" field (matches schema)
+if (!req.body.productId || !req.body.name || !req.body.price || !req.body.description) {
+    return res.status(400).json({
+        message: "Missing required fields: productId, name, price, description"
+    });
+}
 
     // Check if productId already exists
     try {
@@ -57,9 +58,10 @@ export async function saveProduct(req, res) {
         });
     }
 
+    // ✅ FIXED: Use "name" field (matching schema)
     const product = new Product({
         productId: req.body.productId,
-        productName: req.body.productName,
+        name: req.body.name,  // ✅ Changed from productName to name
         description: req.body.description,
         altNames: req.body.altNames || [],
         images: req.body.images || [],
@@ -83,7 +85,6 @@ export async function saveProduct(req, res) {
         });
     }
 }
-
 // Get product by MongoDB _id
 export async function getProductById(req,res){
     const productId = req.params.productId

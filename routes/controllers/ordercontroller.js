@@ -25,18 +25,18 @@ export async function createOrder(req, res) {
     // ✅ Step 3: Generate unique order ID (CBC00001, CBC00002, etc.)
     let orderId = "CBC00001";
 
-    const lastOrder = await Order.find().sort({ date: -1 }).limit(1);
-
-    if (lastOrder.length > 0) {
-        const lastOrderId = lastOrder[0].orderId; // Example: "CBC00551"
-        const lastOrderNumberString = lastOrderId.replace("CBC", ""); // "00551"
-        const lastOrderNumber = parseInt(lastOrderNumberString); // 551
-        const newOrderNumber = lastOrderNumber + 1; // 552
-        const newOrderNumberString = String(newOrderNumber).padStart(5, "0"); // "00552"
-        orderId = "CBC" + newOrderNumberString; // "CBC00552"
-    }
-
     try {
+        const lastOrder = await Order.find().sort({ date: -1 }).limit(1);
+
+        if (lastOrder.length > 0) {
+            const lastOrderId = lastOrder[0].orderId;
+            const lastOrderNumberString = lastOrderId.replace("CBC", "");
+            const lastOrderNumber = parseInt(lastOrderNumberString);
+            const newOrderNumber = lastOrderNumber + 1;
+            const newOrderNumberString = String(newOrderNumber).padStart(5, "0");
+            orderId = "CBC" + newOrderNumberString;
+        }
+
         let total = 0;
         let labelledTotal = 0;
         const products = [];
@@ -63,15 +63,23 @@ export async function createOrder(req, res) {
                 return;
             }
 
+            // ✅ FIXED: Handle both "productName" and "name" fields
+            // Check productName first since most products use this
+            const productName = item.productName || item.name || "Product";
+            const productAltNames = item.altNames || [];
+            const productDescription = item.description || "";
+            const productImages = item.images || [];
+            const productLabelledPrice = item.labelledPrice || item.price;
+
             // ✅ Add product to order array
             products[i] = {
                 productInfo: {
                     productId: item.productId,
-                    name: item.name,
-                    altNames: item.altNames,
-                    description: item.description,
-                    images: item.images,
-                    labelledPrice: item.labelledPrice,
+                    name: productName,  // ✅ Works with both field names
+                    altNames: productAltNames,
+                    description: productDescription,
+                    images: productImages,
+                    labelledPrice: productLabelledPrice,
                     price: item.price
                 },
                 quantity: orderInfo.products[i].qty
@@ -79,7 +87,7 @@ export async function createOrder(req, res) {
 
             // ✅ Calculate totals
             total += item.price * orderInfo.products[i].qty;
-            labelledTotal += item.labelledPrice * orderInfo.products[i].qty;
+            labelledTotal += productLabelledPrice * orderInfo.products[i].qty;
         }
 
         // ✅ Step 5: Create order object
