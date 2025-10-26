@@ -7,6 +7,8 @@ import jwt from 'jsonwebtoken';
 
 import productRouter from './routes/productroute.js';
 import userRouter from './routes/userRoute.js';
+import orderRouter from './routes/orderRoute.js';  // ✅ Add this line
+//import orderRouter from './routes/orderRoute.js';
 
 dotenv.config();
 
@@ -51,6 +53,7 @@ app.use((req, res, next) => {
 // Register routes
 app.use('/products', productRouter);
 app.use('/users', userRouter);
+app.use('/orders', orderRouter);  // ✅ Add this line
 
 // ✅ Global error handler
 app.use((err, req, res, next) => {
