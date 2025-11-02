@@ -76,7 +76,7 @@ export function loginUser(req, res){
                         img: user.img,
                         userId: user._id  // ✅ Added userId for future use
                     }, 
-                    process.env.JWT_KEY || "cbc-batch-five@2025"  // Use env var or fallback
+                    process.env.JWT_KEY 
                 );
 
                 return res.json({
