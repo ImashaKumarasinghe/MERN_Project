@@ -3,6 +3,7 @@ import User from "../../models/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import axios from "axios";
 
 dotenv.config();
 
@@ -114,4 +115,22 @@ export function isAdmin(req) {
     }
     
     return req.user.role === "admin";
+}
+
+export async function loginWithGoogle(req, res) { 
+    const token = req.body.accessToken;
+    if(token == null){
+        return res.status(400).json({
+            message: "Access token is required"
+        });
+        return;
+    } 
+    const response = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    console.log(response.data);
+
+
 }
