@@ -117,20 +117,49 @@ export function isAdmin(req) {
     return req.user.role === "admin";
 }
 
-export async function loginWithGoogle(req, res) { 
-    const token = req.body.accessToken;
-    if(token == null){
-        return res.status(400).json({
-            message: "Access token is required"
-        });
-        return;
-    } 
-    const response = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-    console.log(response.data);
+export async function loginWithGoogle(req, res) {
+  const token = req.body.accessToken; // ✅ match frontend
+  if (!token) {
+    return res.status(400).json({ message: "Access token is required" });
+  }
 
+  try {
+    const response = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
+    let user = await User.findOne({ email: response.data.email });
+
+    if (!user) {
+      user = new User({
+        email: response.data.email,
+        firstname: response.data.given_name, // standardized
+        lastname: response.data.family_name,
+        password: "googleUser",
+        img: response.data.picture,
+      });
+      await user.save();
+    }
+
+    const jwtToken = jwt.sign(
+      {
+        email: user.email,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        role: user.role,
+        img: user.img,
+        userId: user._id,
+      },
+      process.env.JWT_KEY
+    );
+
+    res.json({
+      message: "Login successful",
+      token: jwtToken,
+      role: user.role,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Google login failed", error: err.message });
+  }
 }
