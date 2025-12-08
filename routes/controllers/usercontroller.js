@@ -176,6 +176,37 @@ const transport = nodemailer.createTransport({
         pass: process.env.APP_PASSWORD
     }
 })
-export async function sendOTP(req, res) {
 
+export async function sendOTP(req, res) {
+    const randomOTP = Math.floor(100000 + Math.random() * 900000);
+    const email = req.body.email;
+
+    if (!email) {
+        return res.status(400).json({
+            message: "Email is required"
+        });
+    }
+
+    const message = {
+        from: process.env.APP_EMAIL,
+        to: email,
+        subject: "Resetting password for cosmetics app",
+        text: `Your OTP is: ${randomOTP}`
+    };
+
+    transport.sendMail(message, (err, info) => {
+        if (err) {
+            console.log("Error occurred while sending email: ", err);
+            return res.status(500).json({
+                message: "Failed to send OTP",
+                error: err.message
+            });
+        } else {
+            console.log("Email sent successfully:", info.response);
+            return res.status(200).json({
+                message: "OTP sent successfully",
+                otp: randomOTP
+            });
+        }
+    });
 }
