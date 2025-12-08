@@ -6,8 +6,12 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 
 import productRouter from './routes/productroute.js';
-import userRouter from './routes/userRoute.js';
+
 import orderRouter from './routes/orderRoute.js';
+import userRouter from './routes/userRoute.js';
+
+
+
 
 dotenv.config();
 
@@ -53,4 +57,6 @@ app.use("/api/orders", orderRouter);
 
 app.listen(process.env.PORT || 5000, () => {
     console.log(`Server is running on port ${process.env.PORT || 5000}`);
+    console.log("User routes loaded");
+
 });
