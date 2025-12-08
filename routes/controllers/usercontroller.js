@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import axios from "axios";
+import nodemailer from "nodemailer";
 
 dotenv.config();
 
@@ -162,4 +163,9 @@ export async function loginWithGoogle(req, res) {
     console.error(err);
     res.status(500).json({ message: "Google login failed", error: err.message });
   }
+}
+
+const transport = nodemailer; // Placeholder for email transport configuration
+export async function sendOTP(req, res) {
+
 }
