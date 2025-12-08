@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import axios from "axios";
 import nodemailer from "nodemailer";
 
+
 dotenv.config();
 
 export function createUser(req, res){
@@ -164,8 +165,17 @@ export async function loginWithGoogle(req, res) {
     res.status(500).json({ message: "Google login failed", error: err.message });
   }
 }
-
-const transport = nodemailer; // Placeholder for email transport configuration
+//manage email service
+const transport = nodemailer.createTransport({
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    auth: {
+        user: process.env.APP_EMAIL,
+        pass: process.env.APP_PASSWORD
+    }
+})
 export async function sendOTP(req, res) {
 
 }
