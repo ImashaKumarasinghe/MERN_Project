@@ -228,3 +228,11 @@ export async function sendOTP(req, res) {
         }
     });
 }
+export function resetPassword(req, res) {
+    const otp= req.body.otp;
+    const email = req.body.email;
+    const newPassword = req.body.newPassword
+
+    
+
+}
