@@ -195,7 +195,10 @@ export async function sendOTP(req, res) {
             message: "User with this email does not exist"
         });
     }
-    
+    //delete otp if already exists
+        await OTP.deleteMany({ 
+            email: email 
+        });
 
     const message = {
         from: process.env.APP_EMAIL,
