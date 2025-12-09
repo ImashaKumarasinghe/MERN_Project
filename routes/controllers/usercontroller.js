@@ -187,6 +187,16 @@ export async function sendOTP(req, res) {
         });
     }
 
+    const user= await User.findOne({
+        email: email
+    });
+    if (user==null) {
+        return res.status(404).json({
+            message: "User with this email does not exist"
+        });
+    }
+    
+
     const message = {
         from: process.env.APP_EMAIL,
         to: email,
