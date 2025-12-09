@@ -5,7 +5,8 @@ import {
     getProductById, 
     updateProduct, 
     deleteProduct,
-    deleteProductByProductId  // Import new function
+    deleteProductByProductId,
+    SearchProducts  // Import new function
 } from "./controllers/productcontroller.js";
 
 const productRouter = express.Router();
@@ -27,5 +28,7 @@ productRouter.delete("/:id", deleteProduct);
 
 // Delete product by productId (using body)
 productRouter.delete("/", deleteProductByProductId);
+//search query
+productRouter.get("/search/:searchQuery", SearchProducts);
 
 export default productRouter;

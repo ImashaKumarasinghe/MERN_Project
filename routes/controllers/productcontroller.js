@@ -221,3 +221,23 @@ export async function deleteProductByProductId(req, res) {
         });
     }
 }
+//search product
+export default async  function  SearchProducts(req,res){
+    const searchQuery = req.params.searchQuery;
+    try{
+
+        const products = await Product.find({
+            $or: [
+                { name: { $regex: searchQuery, $options: 'i' } },//i=case insensitive
+                { altNames: {$elemMatch: { $regex: searchQuery, $options: 'i' } } },
+            ]
+        });
+        res.json(products);
+    }catch(err){
+        res.status(500).json({
+            message : "Internal server error",
+            error : err
+        })
+
+    }
+}
