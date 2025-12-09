@@ -206,6 +206,11 @@ export async function sendOTP(req, res) {
         subject: "Resetting password for cosmetics app",
         text: `Your OTP is: ${randomOTP}`
     };
+    const otp= new OTP({
+        email: email,
+        otp: randomOTP
+    });
+    await otp.save();
 
     transport.sendMail(message, (err, info) => {
         if (err) {
