@@ -11,6 +11,7 @@ const userRouter = express.Router();
 userRouter.post("/register", createUser);
 userRouter.post("/login", loginUser);
 userRouter.post("/login/google", loginWithGoogle);
+userRouter.post("/reset-password", resetPassword);
 
 userRouter.post("/send-otp", sendOTP);
 
