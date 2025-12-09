@@ -5,6 +5,8 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import axios from "axios";
 import nodemailer from "nodemailer";
+import OTP from "../../models/otp.js";
+
 
 
 dotenv.config();
@@ -228,11 +230,37 @@ export async function sendOTP(req, res) {
         }
     });
 }
-export function resetPassword(req, res) {
+export async function resetPassword(req, res) {
     const otp= req.body.otp;
     const email = req.body.email;
     const newPassword = req.body.newPassword
 
-    
+    const response= await OTP.findOne({
+        email: email,
+    })
+    if(response==null){
+        return res.status(500).json({
+            message: "OTP not found for this email"
+        });
+    }
+    if(otp==response.otp){
+        await OTP.deleteMany({
+            email: email
+        });
+        const hashedPassword = bcrypt.hashSync(newPassword, 10);
+        const response2=await User.updateOne(
+            {email: email},
+            {password: hashedPassword}
+        )
+        res.json({
+            message: "Password reset successful"
+        });
+       
+
+    }else{
+        return res.status(403).json({
+            message: "OTPs are not matching"
+        });
+    }
 
 }
