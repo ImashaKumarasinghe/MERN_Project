@@ -1,10 +1,6 @@
 import express from "express";
-import { 
-    createUser, 
-    loginUser, 
-    loginWithGoogle, 
-    sendOTP 
-} from "./controllers/usercontroller.js";   // CORRECTED PATH
+import { createUser, loginUser, loginWithGoogle, sendOTP, resetPassword } 
+from "./controllers/usercontroller.js";
 
 const userRouter = express.Router();
 
