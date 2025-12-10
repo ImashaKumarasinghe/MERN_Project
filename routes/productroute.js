@@ -6,10 +6,13 @@ import {
     updateProduct, 
     deleteProduct,
     deleteProductByProductId,
-    SearchProducts  // Import new function
+    SearchProducts 
 } from "./controllers/productcontroller.js";
 
 const productRouter = express.Router();
+
+//search query
+productRouter.get("/search/:query", SearchProducts);
 
 // Get all products
 productRouter.get("/", getProducts);
@@ -26,9 +29,9 @@ productRouter.put("/:productId", updateProduct);
 // Delete product by MongoDB _id
 productRouter.delete("/:id", deleteProduct);
 
+
 // Delete product by productId (using body)
 productRouter.delete("/", deleteProductByProductId);
-//search query
-productRouter.get("/search/:searchQuery", SearchProducts);
+
 
 export default productRouter;
