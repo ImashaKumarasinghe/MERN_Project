@@ -264,3 +264,9 @@ export async function resetPassword(req, res) {
     }
 
 }
+
+export function getUser(req, res){
+    return res.json({
+        ...req.user
+    });
+}
