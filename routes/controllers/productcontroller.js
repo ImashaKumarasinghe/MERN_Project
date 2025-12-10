@@ -222,7 +222,7 @@ export async function deleteProductByProductId(req, res) {
     }
 }
 //search product
-export default async  function  SearchProducts(req,res){
+export  async  function  SearchProducts(req,res){
     const searchQuery = req.params.searchQuery;
     try{
 
