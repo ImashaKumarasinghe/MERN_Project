@@ -223,7 +223,7 @@ export async function deleteProductByProductId(req, res) {
 }
 //search product
 export  async  function  SearchProducts(req,res){
-    const searchQuery = req.params.searchQuery;
+    const searchQuery = req.params.query;
     try{
 
         const products = await Product.find({
