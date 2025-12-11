@@ -6,9 +6,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 
 import productRouter from './routes/productroute.js';
-
 import orderRouter from './routes/orderRoute.js';
 import userRouter from './routes/userRoute.js';
+import reviewRouter from './routes/reviewRoute.js';
 
 
 
@@ -52,8 +52,12 @@ mongoose.connect(process.env.MONGODB_URL)
     });
 
 app.use("/api/products", productRouter);
+app.use("/api/reviews", reviewRouter);
 app.use("/api/users", userRouter);
 app.use("/api/orders", orderRouter);
+
+
+
 
 app.listen(process.env.PORT || 5000, () => {
     console.log(`Server is running on port ${process.env.PORT || 5000}`);
