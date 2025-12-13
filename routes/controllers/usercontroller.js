@@ -270,3 +270,17 @@ export function getUser(req, res){
         ...req.user
     });
 }
+// Only for admin to get all users
+export async function getAllUsers(req, res) {
+    if (!req.user || req.user.role !== "admin") {
+        return res.status(403).json({ message: "Access denied" });
+    }
+
+    try {
+        const users = await User.find().select("-password"); // Exclude passwords
+        res.json({ users });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to fetch users", error: err.message });
+    }
+}
