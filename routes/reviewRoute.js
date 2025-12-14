@@ -8,15 +8,15 @@ router.post("/", async (req, res) => {
   try {
     const { productId, name, rating, comment } = req.body;
 
-    if (!productId || !name || !rating || !comment) {
-      return res.status(400).json({ error: "All fields are required" });
+    if (!productId || !rating || !comment) {
+      return res.status(400).json({ error: "Product, rating, and comment are required" });
     }
 
     const review = await Review.create({
       productId,
-      name,
+      name: req.user.firstname + " " + req.user.lastname,
       rating: Number(rating),
-      comment
+      comment,
     });
 
     res.status(201).json(review);
